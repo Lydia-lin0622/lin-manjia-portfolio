@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>林曼佳 · 内容创作者 & 海外运营</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* =============================================
+   🎨 COLOR VARIABLES
+   ============================================= */
+:root {
+  --teal:       #2a9d8f;
+  --teal-lt:    #4db6a8;
+  --teal-pale:  #e8f5f3;
+  --teal-mid:   #b2ddd9;
+  --sage:       #6b9e95;
+  --cream:      #fafaf8;
+  --cream2:     #f3f3ef;
+  --ink:        #1c2321;
+  --ink2:       #3d4a47;
+  --ink3:       #7a8c88;
+  --white:      #ffffff;
+  --radius:     14px;
+  --radius-sm:  8px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'DM Sans', sans-serif;
+  background:var(--cream);
+  color:var(--ink);
+  overflow-x:hidden;
+}
+
+/* =============================================
+   NAV
+   ============================================= */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:.85rem 2.5rem;
+  background:rgba(250,250,248,.88);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(42,157,143,.12);
+  transition:box-shadow .3s;
+}
+nav.scrolled { box-shadow:0 2px 24px rgba(42,157,143,.1); }
+.nav-logo { font-family:'Lora', serif; font-size:1.05rem; font-weight:600; color:var(--ink); letter-spacing:.02em; }
+.nav-logo span { color:var(--teal); }
+.nav-links { display:flex; gap:2rem; align-items:center; }
+.nav-links a { font-size:.8rem; color:var(--ink3); text-decoration:none; letter-spacing:.04em; transition:color .2s; }
+.nav-links a:hover { color:var(--teal); }
+
+.nav-search-btn {
+  display:flex; align-items:center; gap:.45rem;
+  font-size:.78rem; font-weight:500; color:var(--white);
+  background:var(--teal); border:none; border-radius:999px;
+  padding:.45em 1.15em; cursor:pointer; transition:background .2s, transform .15s;
+  letter-spacing:.03em;
+}
+.nav-search-btn:hover { background:var(--teal-lt); transform:scale(1.03); }
+.nav-search-btn svg { width:14px; height:14px; flex-shrink:0; }
+
+/* =============================================
+   AI SEARCH MODAL
+   ============================================= */
+.search-modal {
+  display:none; position:fixed; inset:0; z-index:500;
+  background:rgba(28,35,33,.45); backdrop-filter:blur(8px);
+  align-items:flex-start; justify-content:center; padding-top:6rem;
+}
+.search-modal.open { display:flex; }
+.search-panel {
+  background:var(--white); border-radius:var(--radius);
+  width:min(640px, 92vw);
+  box-shadow:0 24px 64px rgba(42,157,143,.18);
+  overflow:hidden; animation:slideDown .25s ease;
+}
+@keyframes slideDown { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:none} }
+.search-panel-top {
+  display:flex; align-items:center; gap:.75rem;
+  padding:1rem 1.25rem; border-bottom:1px solid var(--teal-pale);
+}
+.search-panel-top svg { width:18px; height:18px; flex-shrink:0; }
+#modalInput {
+  flex:1; font-family:'DM Sans',sans-serif; font-size:.95rem;
+  border:none; outline:none; color:var(--ink); background:transparent;
+}
+#modalInput::placeholder { color:var(--ink3); }
+.search-close-btn {
+  font-size:.7rem; color:var(--ink3); background:var(--cream2);
+  border:none; border-radius:6px; padding:.3em .6em; cursor:pointer; flex-shrink:0;
+}
+.quick-chips { display:flex; flex-wrap:wrap; gap:.5rem; padding:.9rem 1.25rem; border-bottom:1px solid var(--teal-pale); }
+.chip {
+  font-size:.72rem; padding:.35em .9em; border-radius:999px;
+  border:1px solid var(--teal-mid); color:var(--teal);
+  background:var(--teal-pale); cursor:pointer; transition:background .15s;
+}
+.chip:hover { background:var(--teal-mid); }
+.ai-answer {
+  padding:1.25rem; font-size:.9rem; line-height:1.8;
+  color:var(--ink2); min-height:80px; display:none; white-space:pre-wrap;
+}
+.ai-answer.show { display:block; }
+.ai-answer.loading { color:var(--ink3); font-style:italic; display:block; }
+.send-row {
+  display:flex; padding:.75rem 1.25rem; border-top:1px solid var(--teal-pale); justify-content:flex-end;
+}
+.send-btn {
+  font-size:.8rem; font-weight:500; letter-spacing:.04em;
+  padding:.5em 1.4em; border-radius:999px;
+  background:var(--teal); color:var(--white); border:none; cursor:pointer; transition:background .2s;
+}
+.send-btn:hover { background:var(--teal-lt); }
+
+/* =============================================
+   HERO
+   ============================================= */
+.hero {
+  min-height:100vh;
+  display:grid; grid-template-columns:1fr 1fr;
+  align-items:center; padding:6rem 6vw 4rem; gap:4rem;
+  background:linear-gradient(135deg, var(--teal-pale) 0%, var(--cream) 55%);
+  position:relative; overflow:hidden;
+}
+.hero::before {
+  content:''; position:absolute; right:-80px; top:-80px;
+  width:400px; height:400px; border-radius:50%;
+  background:radial-gradient(circle, rgba(42,157,143,.08) 0%, transparent 70%);
+  pointer-events:none;
+}
+.hero-eyebrow {
+  display:inline-flex; align-items:center; gap:.5rem;
+  font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--teal); font-weight:500;
+  background:rgba(42,157,143,.1); border-radius:999px;
+  padding:.35em 1em; margin-bottom:1.8rem;
+}
+.hero-eyebrow::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--teal); flex-shrink:0; }
+.hero-name { font-family:'Lora', serif; font-size:clamp(2.8rem,5vw,4.2rem); font-weight:600; line-height:1.1; color:var(--ink); margin-bottom:.5rem; }
+.hero-name-zh { font-family:'Noto Serif SC', serif; font-size:1.3rem; font-weight:300; color:var(--teal); letter-spacing:.35em; margin-bottom:1.8rem; }
+.hero-desc { font-size:1rem; line-height:1.8; color:var(--ink2); max-width:420px; margin-bottom:2.2rem; font-weight:300; }
+.hero-tags { display:flex; flex-wrap:wrap; gap:.5rem; margin-bottom:2.5rem; }
+.hero-tag {
+  font-size:.73rem; padding:.4em 1em; border-radius:999px;
+  border:1px solid rgba(42,157,143,.3); color:var(--ink2); background:var(--white);
+}
+.hero-cta {
+  display:inline-flex; align-items:center; gap:.6rem;
+  background:var(--teal); color:var(--white);
+  padding:.75em 1.8em; border-radius:999px;
+  text-decoration:none; font-size:.88rem; font-weight:500;
+  transition:background .2s, transform .15s;
+}
+.hero-cta:hover { background:var(--teal-lt); transform:translateY(-1px); }
+.hero-cta svg { width:16px; height:16px; }
+.hero-right { display:flex; flex-direction:column; gap:1rem; align-items:flex-end; }
+.stats-strip { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; width:100%; }
+.stat-box {
+  background:var(--white); border-radius:var(--radius); padding:1.2rem 1.3rem;
+  border:1px solid rgba(42,157,143,.12); transition:border-color .2s, transform .2s;
+}
+.stat-box:hover { border-color:var(--teal-mid); transform:translateY(-2px); }
+.stat-num { font-family:'Lora', serif; font-size:2rem; font-weight:600; color:var(--teal); line-height:1; }
+.stat-label { font-size:.72rem; color:var(--ink3); margin-top:.3rem; letter-spacing:.02em; }
+
+/* =============================================
+   SECTION BASE
+   ============================================= */
+section { padding:5.5rem 6vw; }
+.container { max-width:1100px; margin:0 auto; }
+.sec-label { font-size:.68rem; letter-spacing:.2em; text-transform:uppercase; color:var(--teal); font-weight:500; margin-bottom:.6rem; }
+.sec-title { font-family:'Lora', serif; font-size:clamp(1.8rem,3vw,2.5rem); font-weight:600; color:var(--ink); line-height:1.2; margin-bottom:3rem; }
+
+/* =============================================
+   📸 PHOTO GALLERY — 个人照片展示区
+   ============================================= */
+#gallery { background:var(--cream2); }
+.gallery-intro { font-size:.92rem; color:var(--ink3); line-height:1.7; margin-bottom:2rem; font-weight:300; max-width:560px; }
+.gallery-grid {
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  grid-template-rows:auto auto;
+  gap:.75rem;
+}
+.gallery-item {
+  border-radius:var(--radius-sm); overflow:hidden;
+  background:var(--teal-pale);
+  position:relative; cursor:pointer;
+}
+.gallery-item:nth-child(1) { grid-column:span 2; grid-row:span 2; }
+.gallery-item img {
+  width:100%; height:100%; object-fit:cover;
+  display:block; transition:transform .4s ease;
+  min-height:180px;
+}
+.gallery-item:hover img { transform:scale(1.04); }
+/* 图片占位符（无图片时显示） */
+.gallery-ph {
+  width:100%; padding-bottom:75%; position:relative;
+  background:linear-gradient(135deg, var(--teal-pale), var(--teal-mid));
+}
+.gallery-item:nth-child(1) .gallery-ph { padding-bottom:100%; }
+.gallery-ph-inner {
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:.5rem;
+}
+.gallery-ph-icon { font-size:2rem; opacity:.5; }
+.gallery-ph-text { font-size:.68rem; color:var(--teal); opacity:.7; letter-spacing:.06em; text-align:center; padding:0 1rem; }
+/* ✏️ 如何添加照片：
+   将 <div class="gallery-ph">...</div> 替换为：
+   <img src="你的照片文件名.jpg" alt="描述" style="width:100%;height:100%;object-fit:cover;">
+*/
+
+/* 图片灯箱 */
+.lightbox {
+  display:none; position:fixed; inset:0; z-index:600;
+  background:rgba(0,0,0,.85); align-items:center; justify-content:center;
+}
+.lightbox.open { display:flex; }
+.lightbox img { max-width:90vw; max-height:90vh; border-radius:var(--radius); }
+.lightbox-close { position:absolute; top:1.5rem; right:1.5rem; font-size:1.5rem; color:#fff; cursor:pointer; background:none; border:none; opacity:.7; }
+
+/* =============================================
+   📊 SOCIAL STATS — 社媒数据展示
+   ============================================= */
+#social-stats { background:var(--cream); }
+.social-platforms { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:1.25rem; }
+.platform-card {
+  background:var(--white); border-radius:var(--radius);
+  border:1px solid rgba(42,157,143,.12);
+  padding:1.6rem 1.4rem;
+  transition:transform .25s, box-shadow .25s, border-color .25s;
+  position:relative; overflow:hidden;
+}
+.platform-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  background:var(--teal);
+}
+.platform-card:hover { transform:translateY(-4px); box-shadow:0 16px 40px rgba(42,157,143,.12); border-color:var(--teal-mid); }
+.platform-header { display:flex; align-items:center; gap:.75rem; margin-bottom:1.25rem; }
+.platform-icon { font-size:1.6rem; }
+.platform-name { font-size:.9rem; font-weight:500; color:var(--ink); }
+.platform-handle { font-size:.72rem; color:var(--ink3); }
+.platform-metrics { display:flex; flex-direction:column; gap:.7rem; }
+.metric-row { display:flex; justify-content:space-between; align-items:center; }
+.metric-name { font-size:.76rem; color:var(--ink3); }
+.metric-val { font-size:.88rem; font-weight:500; color:var(--teal); font-family:'Lora', serif; }
+.platform-note { font-size:.73rem; color:var(--ink3); margin-top:1rem; line-height:1.6; padding-top:1rem; border-top:1px solid var(--teal-pale); font-weight:300; }
+/* ✏️ 修改数据：在下面 HTML 部分找到 id="social-stats" 直接修改数字即可 */
+
+/* =============================================
+   🎬 VIDEO SHOWCASE — 视频作品展示
+   ============================================= */
+#videos { background:var(--cream2); }
+.video-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(320px,1fr)); gap:1.5rem; }
+.video-item {
+  border-radius:var(--radius); overflow:hidden;
+  background:var(--white); border:1px solid rgba(42,157,143,.1);
+  transition:transform .25s, box-shadow .25s;
+}
+.video-item:hover { transform:translateY(-4px); box-shadow:0 16px 40px rgba(42,157,143,.12); }
+.video-container {
+  position:relative; padding-bottom:56.25%; height:0; overflow:hidden;
+  background:var(--ink);
+}
+.video-container iframe {
+  position:absolute; top:0; left:0; width:100%; height:100%; border:none;
+}
+/* 视频占位符（未填入链接时显示） */
+.video-ph {
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  background:linear-gradient(135deg, #1c2321, #2a4a45);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.75rem;
+  cursor:pointer;
+}
+.video-ph-play {
+  width:54px; height:54px; border-radius:50%;
+  background:rgba(42,157,143,.85);
+  display:flex; align-items:center; justify-content:center;
+  transition:transform .2s, background .2s;
+}
+.video-ph:hover .video-ph-play { transform:scale(1.1); background:var(--teal); }
+.video-ph-play svg { width:22px; height:22px; color:#fff; margin-left:3px; }
+.video-ph-label { font-size:.72rem; color:rgba(255,255,255,.45); letter-spacing:.1em; text-align:center; padding:0 1rem; }
+.video-body { padding:1.2rem 1.3rem; }
+.video-badge {
+  display:inline-block; font-size:.65rem; letter-spacing:.1em;
+  text-transform:uppercase; padding:.28em .8em; border-radius:999px;
+  background:var(--teal-pale); color:var(--teal); margin-bottom:.6rem; font-weight:500;
+}
+.video-title { font-family:'Lora', serif; font-size:1rem; color:var(--ink); margin-bottom:.35rem; }
+.video-desc { font-size:.82rem; line-height:1.65; color:var(--ink3); font-weight:300; }
+.video-metric {
+  margin-top:.9rem; font-size:.75rem; font-weight:500; color:var(--teal);
+  display:flex; align-items:center; gap:.35rem;
+}
+.video-metric::before { content:''; width:18px; height:2px; background:var(--teal); border-radius:1px; }
+
+/* =============================================
+   🗂️ WORKS PORTFOLIO GRID
+   ============================================= */
+#works { background:var(--cream); }
+.works-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:1.25rem; }
+.work-card {
+  background:var(--white); border-radius:var(--radius);
+  border:1px solid rgba(42,157,143,.1); overflow:hidden;
+  transition:transform .25s, box-shadow .25s;
+}
+.work-card:hover { transform:translateY(-4px); box-shadow:0 16px 40px rgba(42,157,143,.12); }
+.work-img { width:100%; aspect-ratio:4/3; object-fit:cover; display:block; background:var(--teal-pale); }
+.work-img-ph {
+  width:100%; aspect-ratio:4/3;
+  background:linear-gradient(135deg, var(--teal-pale), var(--teal-mid));
+  display:flex; align-items:center; justify-content:center; font-size:2.5rem;
+}
+.work-body { padding:1.2rem 1.3rem; }
+.work-badge {
+  display:inline-block; font-size:.65rem; letter-spacing:.1em;
+  text-transform:uppercase; padding:.28em .8em; border-radius:999px;
+  background:var(--teal-pale); color:var(--teal); margin-bottom:.6rem; font-weight:500;
+}
+.work-title { font-family:'Lora', serif; font-size:1.05rem; color:var(--ink); margin-bottom:.4rem; }
+.work-desc { font-size:.83rem; line-height:1.65; color:var(--ink3); font-weight:300; }
+.work-metric {
+  margin-top:.9rem; font-size:.75rem; font-weight:500; color:var(--teal);
+  display:flex; align-items:center; gap:.35rem;
+}
+.work-metric::before { content:''; width:18px; height:2px; background:var(--teal); border-radius:1px; }
+.work-card.coming { border-style:dashed; opacity:.65; background:transparent; }
+.work-card.coming .work-img-ph { background:var(--cream2); color:var(--teal-mid); font-size:1.5rem; }
+
+/* =============================================
+   SKILLS
+   ============================================= */
+#skills { background:var(--cream2); }
+.skills-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:1rem; }
+.skill-card {
+  padding:1.5rem; border-radius:var(--radius);
+  border:1px solid rgba(42,157,143,.12); background:var(--white);
+  transition:border-color .2s, transform .2s;
+}
+.skill-card:hover { border-color:var(--teal); transform:translateY(-2px); }
+.skill-icon { font-size:1.4rem; margin-bottom:.9rem; }
+.skill-name { font-size:.95rem; font-weight:500; color:var(--ink); margin-bottom:.4rem; }
+.skill-desc { font-size:.82rem; line-height:1.65; color:var(--ink3); font-weight:300; }
+.skill-tags { display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.8rem; }
+.stag { font-size:.63rem; padding:.25em .65em; border-radius:6px; background:var(--teal-pale); color:var(--teal); font-weight:500; }
+
+/* =============================================
+   EXPERIENCE TIMELINE
+   ============================================= */
+#experience { background:var(--cream); }
+.timeline { display:flex; flex-direction:column; gap:0; }
+.tl-item {
+  display:grid; grid-template-columns:170px 1fr;
+  gap:0 2rem; padding:2rem 0;
+  border-bottom:1px solid rgba(42,157,143,.1);
+  position:relative;
+}
+.tl-item::after {
+  content:''; position:absolute; left:169px; top:2rem; bottom:2rem;
+  width:1px; background:rgba(42,157,143,.15);
+}
+.tl-date { font-size:.72rem; color:var(--ink3); line-height:1.8; }
+.tl-co { font-size:.78rem; font-weight:500; color:var(--teal); margin-top:.2rem; margin-bottom:.1rem; }
+.tl-role { font-family:'Lora', serif; font-size:1rem; color:var(--ink); font-weight:600; margin-bottom:.7rem; }
+.tl-points { list-style:none; display:flex; flex-direction:column; gap:.4rem; }
+.tl-points li {
+  font-size:.85rem; line-height:1.7; color:var(--ink2);
+  font-weight:300; padding-left:1.1rem; position:relative;
+}
+.tl-points li::before {
+  content:''; position:absolute; left:0; top:.65rem;
+  width:5px; height:5px; border-radius:50%; background:var(--teal);
+}
+
+/* =============================================
+   ABOUT
+   ============================================= */
+#about { background:var(--cream2); }
+.about-grid { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; }
+.about-text p { font-size:.95rem; line-height:1.9; color:var(--ink2); font-weight:300; margin-bottom:1.1rem; }
+.about-text .hl { color:var(--teal); font-weight:500; }
+.awards-list { display:flex; flex-direction:column; gap:.75rem; }
+.award {
+  display:flex; gap:1rem; align-items:flex-start;
+  background:var(--white); border-radius:var(--radius-sm);
+  padding:1rem 1.2rem; border:1px solid rgba(42,157,143,.1);
+}
+.award-ico { font-size:1.1rem; flex-shrink:0; }
+.award-title { font-size:.88rem; font-weight:500; color:var(--ink); margin-bottom:.2rem; }
+.award-desc { font-size:.78rem; color:var(--ink3); line-height:1.55; font-weight:300; }
+
+/* =============================================
+   CONTACT / FOOTER
+   ============================================= */
+#contact { background:var(--ink); padding:5rem 6vw 3rem; }
+.contact-inner { max-width:1100px; margin:0 auto; }
+.contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:3rem; margin-bottom:3rem; }
+.contact-label { font-size:.65rem; letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,.35); margin-bottom:.4rem; }
+.contact-val { font-size:.95rem; color:rgba(255,255,255,.75); font-weight:300; }
+.contact-divider { border:none; border-top:1px solid rgba(255,255,255,.08); margin:2rem 0 1.5rem; }
+.footer-row { display:flex; justify-content:space-between; align-items:center; }
+.footer-logo { font-family:'Lora', serif; font-size:1rem; color:rgba(255,255,255,.4); }
+.footer-copy { font-size:.7rem; color:rgba(255,255,255,.25); letter-spacing:.06em; }
+
+/* =============================================
+   EDITOR PANEL
+   ============================================= */
+.edit-fab {
+  position:fixed; right:1.25rem; bottom:1.25rem; z-index:450;
+  border:none; border-radius:999px; padding:.75rem 1rem;
+  background:var(--ink); color:var(--white); cursor:pointer;
+  box-shadow:0 14px 36px rgba(28,35,33,.18);
+  font-size:.82rem; letter-spacing:.04em;
+}
+.edit-panel {
+  display:none; position:fixed; right:1.25rem; bottom:4.8rem; z-index:460;
+  width:min(380px, calc(100vw - 2rem)); max-height:78vh; overflow:auto;
+  background:var(--white); border:1px solid rgba(42,157,143,.16);
+  border-radius:var(--radius); box-shadow:0 24px 64px rgba(28,35,33,.2);
+}
+.edit-panel.open { display:block; }
+.edit-head {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:1rem 1.1rem; border-bottom:1px solid var(--teal-pale);
+}
+.edit-title { font-size:.9rem; font-weight:600; color:var(--ink); }
+.edit-close { border:none; background:var(--cream2); border-radius:6px; padding:.3rem .55rem; cursor:pointer; color:var(--ink3); }
+.edit-body { padding:1rem 1.1rem; display:flex; flex-direction:column; gap:1rem; }
+.edit-group { display:flex; flex-direction:column; gap:.55rem; }
+.edit-label { font-size:.72rem; color:var(--teal); font-weight:600; letter-spacing:.08em; text-transform:uppercase; }
+.edit-help { font-size:.76rem; line-height:1.65; color:var(--ink3); }
+.edit-panel input, .edit-panel select, .edit-panel textarea {
+  width:100%; border:1px solid var(--teal-mid); border-radius:8px;
+  padding:.62rem .7rem; font:inherit; font-size:.82rem; color:var(--ink);
+  background:var(--cream);
+}
+.edit-panel textarea { min-height:120px; resize:vertical; line-height:1.55; }
+.edit-actions { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
+.edit-btn {
+  border:none; border-radius:999px; padding:.62rem .8rem; cursor:pointer;
+  background:var(--teal); color:var(--white); font-size:.78rem; font-weight:500;
+}
+.edit-btn.secondary { background:var(--teal-pale); color:var(--teal); }
+.edit-btn.dark { background:var(--ink); color:var(--white); }
+body.editing [data-editable] {
+  outline:1px dashed rgba(42,157,143,.55); outline-offset:3px;
+  cursor:text; border-radius:4px;
+}
+body.editing [data-editable]:focus {
+  outline:2px solid var(--teal); background:rgba(232,245,243,.55);
+}
+
+/* =============================================
+   FADE ANIMATIONS
+   ============================================= */
+.fade { opacity:0; transform:translateY(18px); transition:opacity .65s ease, transform .65s ease; }
+.fade.in { opacity:1; transform:none; }
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+@media(max-width:768px){
+  .hero { grid-template-columns:1fr; padding:5rem 5vw 3rem; gap:2.5rem; }
+  .hero-right { align-items:stretch; }
+  .about-grid, .contact-grid { grid-template-columns:1fr; gap:2rem; }
+  .tl-item { grid-template-columns:1fr; }
+  .tl-item::after { display:none; }
+  .nav-links { display:none; }
+  .gallery-grid { grid-template-columns:repeat(2,1fr); }
+  .gallery-item:nth-child(1) { grid-column:span 2; }
+  .video-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-logo">Lin <span>Manjia</span></div>
+  <div class="nav-links">
+    <a href="#about">关于</a>
+    <a href="#gallery">相册</a>
+    <a href="#social-stats">数据</a>
+    <a href="#videos">视频</a>
+    <a href="#works">作品</a>
+    <a href="#skills">技能</a>
+    <a href="#experience">经历</a>
+    <a href="#contact">联系</a>
+  </div>
+  <button class="nav-search-btn" onclick="openSearch()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    AI 问我
+  </button>
+</nav>
+
+<!-- AI SEARCH MODAL -->
+<div class="search-modal" id="searchModal" onclick="closeOnBg(event)">
+  <div class="search-panel">
+    <div class="search-panel-top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--teal)">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input id="modalInput" type="text" placeholder="问我任何问题，例如：她擅长哪些平台？"
+        onkeydown="if(event.key==='Enter')sendSearch()">
+      <button class="search-close-btn" onclick="closeSearch()">ESC</button>
+    </div>
+    <div class="quick-chips">
+      <span class="chip" onclick="quickAsk('她有哪些跨境电商经验？')">跨境电商</span>
+      <span class="chip" onclick="quickAsk('她的短视频制作能力如何？')">短视频制作</span>
+      <span class="chip" onclick="quickAsk('她熟悉哪些海外社媒平台？')">海外社媒</span>
+      <span class="chip" onclick="quickAsk('她的数据分析能力是什么水平？')">数据分析</span>
+      <span class="chip" onclick="quickAsk('简单介绍一下林曼佳。')">个人介绍</span>
+      <span class="chip" onclick="quickAsk('她在内容创作方面有哪些亮点成绩？')">内容成绩</span>
+      <span class="chip" onclick="quickAsk('她适合什么类型的岗位？')">适合岗位</span>
+      <span class="chip" onclick="quickAsk('她有哪些AIGC相关经验？')">AIGC</span>
+    </div>
+    <div class="ai-answer" id="aiAnswer"></div>
+    <div class="send-row">
+      <button class="send-btn" onclick="sendSearch()">发送 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- 灯箱 -->
+<div class="lightbox" id="lightbox" onclick="this.classList.remove('open')">
+  <button class="lightbox-close" onclick="document.getElementById('lightbox').classList.remove('open')">✕</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<!-- EDITOR PANEL -->
+<button class="edit-fab" onclick="toggleEditor()">编辑</button>
+<aside class="edit-panel" id="editPanel">
+  <div class="edit-head">
+    <div class="edit-title">作品集编辑</div>
+    <button class="edit-close" onclick="toggleEditor(false)">关闭</button>
+  </div>
+  <div class="edit-body">
+    <div class="edit-group">
+      <div class="edit-label">文字内容</div>
+      <div class="edit-help">点「开启文字编辑」后，页面中出现虚线框的文字都可以直接点击修改。改完记得保存。</div>
+      <div class="edit-actions">
+        <button class="edit-btn" onclick="toggleTextEdit()">开启文字编辑</button>
+        <button class="edit-btn secondary" onclick="saveTextEdits()">保存文字</button>
+      </div>
+    </div>
+
+    <div class="edit-group">
+      <div class="edit-label">添加照片</div>
+      <select id="editImageSlot">
+        <option value="0">主图</option>
+        <option value="1">剪辑工作照</option>
+        <option value="2">获奖/大赛现场</option>
+        <option value="3">华为开发者大会</option>
+        <option value="4">运营截图/战绩</option>
+      </select>
+      <input id="editImageFile" type="file" accept="image/*">
+      <button class="edit-btn secondary" onclick="applyImageEdit()">替换照片</button>
+    </div>
+
+    <div class="edit-group">
+      <div class="edit-label">添加视频</div>
+      <select id="editVideoSlot">
+        <option value="0">视频 1</option>
+        <option value="1">视频 2</option>
+        <option value="2">视频 3</option>
+      </select>
+      <input id="editVideoUrl" type="text" placeholder="粘贴 B站/YouTube iframe 链接，或选择本地 MP4">
+      <input id="editVideoFile" type="file" accept="video/mp4,video/webm">
+      <input id="editVideoTitle" type="text" placeholder="视频标题">
+      <input id="editVideoDesc" type="text" placeholder="视频说明">
+      <button class="edit-btn secondary" onclick="applyVideoEdit()">更新视频卡片</button>
+    </div>
+
+    <div class="edit-group">
+      <div class="edit-label">AI 知识库</div>
+      <div class="edit-help">这里是「AI 问我」回答问题时参考的资料。补充越具体，回答越像你本人。</div>
+      <textarea id="profileEditor"></textarea>
+      <button class="edit-btn secondary" onclick="saveProfileEdit()">保存 AI 资料</button>
+    </div>
+
+    <div class="edit-group">
+      <div class="edit-label">导出</div>
+      <div class="edit-help">浏览器本地保存只在当前设备有效。要发给别人或长期保存，请导出新版 HTML。</div>
+      <div class="edit-actions">
+        <button class="edit-btn dark" onclick="exportEditedHtml()">导出 HTML</button>
+        <button class="edit-btn secondary" onclick="resetPortfolioEdits()">清空本地修改</button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- =============================================
+     HERO
+     ============================================= -->
+<section class="hero" id="home">
+  <div class="hero-left">
+    <div class="hero-eyebrow">内容创作者 · 跨境运营</div>
+    <!-- ✏️ 修改名字 -->
+    <div class="hero-name">Lin Manjia</div>
+    <div class="hero-name-zh">林 曼 佳</div>
+    <!-- ✏️ 修改简介文字 -->
+    <p class="hero-desc">
+      专注海外内容运营与跨境电商的内容创作者，擅长用数据驱动创意，在 TikTok、Instagram、Threads 等平台打造有传播力的内容。
+    </p>
+    <div class="hero-tags">
+      <span class="hero-tag">海外内容运营</span>
+      <span class="hero-tag">TikTok 运营</span>
+      <span class="hero-tag">短视频制作</span>
+      <span class="hero-tag">跨境电商</span>
+      <span class="hero-tag">AIGC 创作</span>
+      <span class="hero-tag">数据分析</span>
+    </div>
+    <a href="#works" class="hero-cta">
+      查看我的作品
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+  <div class="hero-right">
+    <div class="stats-strip">
+      <!-- ✏️ 修改 4 个核心数字 -->
+      <div class="stat-box fade">
+        <div class="stat-num">3000<span style="font-size:1.1rem">万+</span></div>
+        <div class="stat-label">单条视频最高播放量</div>
+      </div>
+      <div class="stat-box fade">
+        <div class="stat-num">98<span style="font-size:1.1rem">%</span></div>
+        <div class="stat-label">北美区纠纷解决率</div>
+      </div>
+      <div class="stat-box fade">
+        <div class="stat-num">600<span style="font-size:1.1rem">+</span></div>
+        <div class="stat-label">累计制作短视频条数</div>
+      </div>
+      <div class="stat-box fade">
+        <div class="stat-num">1<span style="font-size:1.1rem">亿+</span></div>
+        <div class="stat-label">内容总曝光量</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     📸 PHOTO GALLERY — 个人相册
+     ✏️ 如何添加照片：
+       1. 找到下面 <div class="gallery-ph">...</div>
+       2. 整个替换成：<img src="你的图片文件名.jpg" alt="描述" style="width:100%;height:100%;min-height:200px;object-fit:cover;display:block;">
+       3. 图片放在同一文件夹下即可生效
+     ============================================= -->
+<section id="gallery">
+  <div class="container">
+    <div class="sec-label">Gallery</div>
+    <div class="sec-title">个人相册</div>
+    <p class="gallery-intro">记录内容创作路上的瞬间——从剪辑室到现场，从大赛舞台到日常。</p>
+    <div class="gallery-grid">
+
+      <!-- 大图（左侧主图） ✏️ 替换为你的主要照片 -->
+      <div class="gallery-item fade" onclick="openLightbox(this)">
+        <div class="gallery-ph">
+          <div class="gallery-ph-inner">
+            <div class="gallery-ph-icon">🤳</div>
+            <div class="gallery-ph-text">在这里放你的<br>主要个人照片</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 小图 2 ✏️ 替换为你的工作/活动照片 -->
+      <div class="gallery-item fade" onclick="openLightbox(this)">
+        <div class="gallery-ph">
+          <div class="gallery-ph-inner">
+            <div class="gallery-ph-icon">🎬</div>
+            <div class="gallery-ph-text">剪辑工作照</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 小图 3 -->
+      <div class="gallery-item fade" onclick="openLightbox(this)">
+        <div class="gallery-ph">
+          <div class="gallery-ph-inner">
+            <div class="gallery-ph-icon">🏆</div>
+            <div class="gallery-ph-text">获奖/大赛现场</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 小图 4 -->
+      <div class="gallery-item fade" onclick="openLightbox(this)">
+        <div class="gallery-ph">
+          <div class="gallery-ph-inner">
+            <div class="gallery-ph-icon">🌐</div>
+            <div class="gallery-ph-text">华为开发者大会</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 小图 5 -->
+      <div class="gallery-item fade" onclick="openLightbox(this)">
+        <div class="gallery-ph">
+          <div class="gallery-ph-inner">
+            <div class="gallery-ph-icon">📱</div>
+            <div class="gallery-ph-text">运营截图/战绩</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ✏️ 继续复制上面 gallery-item 块来添加更多照片 -->
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     📊 SOCIAL STATS — 社媒数据
+     ✏️ 直接修改下面的数字即可更新数据
+     ============================================= -->
+<section id="social-stats">
+  <div class="container">
+    <div class="sec-label">Social Data</div>
+    <div class="sec-title">内容数据</div>
+    <div class="social-platforms">
+
+      <!-- 抖音/快手/B站（媒体矩阵） -->
+      <div class="platform-card fade">
+        <div class="platform-header">
+          <div class="platform-icon">🎵</div>
+          <div>
+            <div class="platform-name">抖音 / 快手 / B站</div>
+            <!-- ✏️ 改成你自己的账号名 -->
+            <div class="platform-handle">@羊城晚报矩阵号</div>
+          </div>
+        </div>
+        <div class="platform-metrics">
+          <div class="metric-row">
+            <span class="metric-name">单条最高播放量</span>
+            <!-- ✏️ 改数字 -->
+            <span class="metric-val">3,000万+</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-name">累计制作视频</span>
+            <span class="metric-val">600+ 条</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-name">总曝光量</span>
+            <span class="metric-val">1亿+</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-name">粉丝增长</span>
+            <span class="metric-val">+30%</span>
+          </div>
+        </div>
+        <div class="platform-note">负责抖音/快手/B站/视频号矩阵号运营，全网 TOP 1% 爆款视频打造，互动率同期提升 25%。</div>
+      </div>
+
+      <!-- Threads -->
+      <div class="platform-card fade">
+        <div class="platform-header">
+          <div class="platform-icon">🧵</div>
+          <div>
+            <div class="platform-name">Threads</div>
+            <!-- ✏️ 改成你的 Threads 账号 -->
+            <div class="platform-handle">@你的Threads账号</div>
+          </div>
+        </div>
+        <div class="platform-metrics">
+          <div class="metric-row">
+            <span class="metric-name">单月浏览量</span>
+            <span class="metric-val">25万+</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-name">运营方向</span>
+            <span class="metric-val">英文内容</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-name">内容方向测试</span>
+            <span class="metric-val">多方向 A/B</span>
+          </div>
+        </div>
+        <div class="platform-note">独立运营英文账号，持续测试不同内容方向，深耕海外用户偏好与互动逻辑，对平台推荐机制有实战理解。</div>
+      </div>
+
+      <!-- 小红书 -->
+      <div class="platform-card fade">
+        <div class="platform-header">
+          <div class="platform-icon">📖</div>
+          <div>
+            <div class="platform-name">小红书</div>
+            <!-- ✏️ 改成你的小红书账号 -->
+            <div class="platform-handle">@你的小红书账号</div>
+          </div>
+        </div>
+        <div class="platform-metrics">
+          <div class="metric-row">
+            <span class="metric-name">粉丝数</span>
+            <span class="metric-val">200+</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-name">笔记最高阅读</span>
+            <span class="metric-val">1万+</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-name">内容方向</span>
+            <span class="metric-val">生活·成长·知识</span>
+          </div>
+        </div>
+        <div class="platform-note">持续输出生活观察、成长及知识分享内容，多篇笔记突破万次阅读，深耕内容选题与封面设计。</div>
+      </div>
+
+      <!-- 跨境电商 -->
+      <div class="platform-card fade">
+        <div class="platform-header">
+          <div class="platform-icon">🛒</div>
+          <div>
+            <div class="platform-name">Amazon / Shopify</div>
+            <div class="platform-handle">HeyBike 北美站</div>
+          </div>
+        </div>
+        <div class="platform-metrics">
+          <div class="metric-row">
+            <span class="metric-name">纠纷解决率</span>
+            <span class="metric-val">98%</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-name">店铺评分维护</span>
+            <span class="metric-val">4.9 ★</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-name">客单价提升</span>
+            <span class="metric-val">+15%</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-name">拦截差评</span>
+            <span class="metric-val">40+ 条</span>
+          </div>
+        </div>
+        <div class="platform-note">全流程 Amazon/Shopify 北美客服，日均处理英文邮件 40+ 封，并搭建售后 SOP 体系，响应时长缩短 20%。</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     🎬 VIDEO SHOWCASE — 视频作品
+     ✏️ 如何植入视频：
+       【B站视频】：在B站视频页面点"分享" → "嵌入代码"，复制 <iframe> 代码，替换下面的 <div class="video-ph">...</div>
+       【YouTube】：右键视频 → "复制嵌入代码"，同样替换 video-ph
+       【抖音】：目前抖音不支持直接嵌入，可截图放在 work-card 里
+       【本地mp4文件】：用 <video controls style="width:100%;height:100%;position:absolute;top:0;left:0;" src="你的视频文件.mp4"></video> 替换
+     ============================================= -->
+<section id="videos">
+  <div class="container">
+    <div class="sec-label">Video Works</div>
+    <div class="sec-title">视频作品</div>
+    <div class="video-grid">
+
+      <!-- 视频 1 — AIGC古诗 -->
+      <div class="video-item fade">
+        <div class="video-container">
+          <!-- ✏️ 把下面整个 video-ph 替换成你的 B站/YouTube iframe 代码 -->
+          <!-- 示例（B站）：
+          <iframe src="https://player.bilibili.com/player.html?bvid=你的BV号&autoplay=0"
+            scrolling="no" frameborder="no" allowfullscreen="true"></iframe>
+          -->
+          <div class="video-ph" onclick="showVideoTip()">
+            <div class="video-ph-play">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <div class="video-ph-label">即梦 AI · 古诗分镜视频<br>点击了解如何植入视频 ↑</div>
+          </div>
+        </div>
+        <div class="video-body">
+          <span class="video-badge">AIGC 创作</span>
+          <div class="video-title">即梦 AI · 古诗分镜</div>
+          <div class="video-desc">基于李白《闻王昌龄左迁龙标遥有此寄》，设计分镜提示词，3D 皮克斯风格 × 中国古代 Q 版人物。</div>
+          <div class="video-metric">DeepSeek + 即梦 AIGC 生成</div>
+        </div>
+      </div>
+
+      <!-- 视频 2 — 爆款新闻视频 -->
+      <div class="video-item fade">
+        <div class="video-container">
+          <!-- ✏️ 替换成你的视频 iframe 或 video 标签 -->
+          <div class="video-ph" onclick="showVideoTip()">
+            <div class="video-ph-play">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <div class="video-ph-label">羊城晚报 爆款视频<br>3000万+ 播放</div>
+          </div>
+        </div>
+        <div class="video-body">
+          <span class="video-badge">短视频运营</span>
+          <div class="video-title">羊城晚报 · 爆款新闻短视频</div>
+          <div class="video-desc">负责抖音/快手/B站矩阵号内容策划与剪辑，单条视频播放量突破 3000 万，位列全网 TOP 1%。</div>
+          <div class="video-metric">总曝光 1 亿+ · 粉丝增长 30%</div>
+        </div>
+      </div>
+
+      <!-- 视频 3 — 数字人项目 -->
+      <div class="video-item fade">
+        <div class="video-container">
+          <!-- ✏️ 替换成你的视频 iframe 或 video 标签 -->
+          <div class="video-ph" onclick="showVideoTip()">
+            <div class="video-ph-play">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <div class="video-ph-label">数字人发布会项目</div>
+          </div>
+        </div>
+        <div class="video-body">
+          <span class="video-badge">AIGC · 数字人</span>
+          <div class="video-title">数字人口播 · 发布会项目</div>
+          <div class="video-desc">基于即梦等工具独立完成数字人口播视频生成，负责脚本生成、内容优化与视频整合。</div>
+          <div class="video-metric">DeepSeek 脚本 + 数字人口播</div>
+        </div>
+      </div>
+
+      <!-- ✏️ 添加更多视频：复制上面整个 video-item 块 -->
+
+    </div>
+
+    <!-- 视频植入指引提示 -->
+    <div id="videoTip" style="display:none;margin-top:1.5rem;background:var(--teal-pale);border-radius:var(--radius-sm);padding:1.25rem 1.5rem;border:1px solid var(--teal-mid);">
+      <div style="font-size:.85rem;font-weight:500;color:var(--teal);margin-bottom:.6rem;">📌 如何植入视频</div>
+      <div style="font-size:.8rem;color:var(--ink2);line-height:1.9;">
+        <b>B站：</b>打开视频 → 点击"分享" → "嵌入代码" → 复制 &lt;iframe&gt; → 粘贴到文件中替换 &lt;div class="video-ph"&gt;...&lt;/div&gt;<br>
+        <b>YouTube：</b>视频下方 → "分享" → "嵌入" → 复制代码 → 同上替换<br>
+        <b>本地 MP4：</b>将 mp4 文件放在同文件夹，替换为 &lt;video controls src="文件名.mp4" style="width:100%;height:100%;position:absolute;top:0;left:0;"&gt;&lt;/video&gt;<br>
+        <b>抖音：</b>暂不支持嵌入，建议截图放在作品卡片区。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     WORKS — 作品集
+     ✏️ 复制一个 work-card 块来添加新作品
+     有图片：把 work-img-ph 替换成 <img class="work-img" src="图片文件名.jpg">
+     ============================================= -->
+<section id="works">
+  <div class="container">
+    <div class="sec-label">Works</div>
+    <div class="sec-title">作品 & 项目</div>
+    <div class="works-grid">
+
+      <div class="work-card fade">
+        <div class="work-img-ph">🤖</div>
+        <div class="work-body">
+          <span class="work-badge">AIGC 创作</span>
+          <div class="work-title">即梦 AI · 古诗分镜</div>
+          <div class="work-desc">基于李白《闻王昌龄左迁龙标遥有此寄》四句古诗，设计即梦 AI 分镜提示词，3D 皮克斯风格 × 古代 Q 版人物，完整视频配音上线。</div>
+          <div class="work-metric">DeepSeek + 即梦 AIGC 生成</div>
+        </div>
+      </div>
+
+      <div class="work-card coming fade">
+        <div class="work-img-ph">🎬</div>
+        <div class="work-body">
+          <span class="work-badge">短视频运营</span>
+          <div class="work-title">羊城晚报 · 爆款新闻短视频</div>
+          <div class="work-desc">负责抖音/快手/B站矩阵号内容策划与剪辑，单条视频突破 3000 万播放，位列全网 TOP 1%。</div>
+          <div class="work-metric">总曝光 1 亿+ · 粉丝增长 30%</div>
+        </div>
+      </div>
+
+      <div class="work-card coming fade">
+        <div class="work-img-ph">🌐</div>
+        <div class="work-body">
+          <span class="work-badge">海外社媒</span>
+          <div class="work-title">Threads · 海外内容账号</div>
+          <div class="work-desc">独立运营 Threads 英文账号，测试不同内容方向与互动形式持续优化内容结构。</div>
+          <div class="work-metric">单月浏览量 25W+</div>
+        </div>
+      </div>
+
+      <div class="work-card coming fade">
+        <div class="work-img-ph">📖</div>
+        <div class="work-body">
+          <span class="work-badge">小红书</span>
+          <div class="work-title">小红书 · 内容与增长</div>
+          <div class="work-desc">持续输出生活观察、成长及知识分享类内容，深耕内容选题与封面设计，部分笔记单篇突破万次阅读。</div>
+          <div class="work-metric">粉丝 200+ · 多篇笔记破万</div>
+        </div>
+      </div>
+
+      <div class="work-card coming fade">
+        <div class="work-img-ph">📦</div>
+        <div class="work-body">
+          <span class="work-badge">跨境电商</span>
+          <div class="work-title">HeyBike · 售后 SOP 体系搭建</div>
+          <div class="work-desc">梳理 40+ 纠纷案例，形成《售后 SOP 手册》，统一客服/运营/销售响应标准，响应时长缩短 20%。</div>
+          <div class="work-metric">纠纷解决率 98% · 店铺 4.9 星</div>
+        </div>
+      </div>
+
+      <div class="work-card coming fade">
+        <div class="work-img-ph">📈</div>
+        <div class="work-body">
+          <span class="work-badge">数据 · 金融</span>
+          <div class="work-title">东方财富杯 · 量化交易实战</div>
+          <div class="work-desc">担任操盘手，融合 MACD/RSI/均线与行业轮动策略，建立量化止损机制，最大回撤仅 5%。</div>
+          <div class="work-metric">账户收益 38.2% · 省级二等奖</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <div class="sec-label">Skills</div>
+    <div class="sec-title">核心技能</div>
+    <div class="skills-grid">
+      <div class="skill-card fade">
+        <div class="skill-icon">🌐</div>
+        <div class="skill-name">海外内容运营</div>
+        <div class="skill-desc">熟悉 TikTok、Instagram、Threads 平台生态，独立 0-1 搭建账号，具备内容策略与冷启动经验。</div>
+        <div class="skill-tags"><span class="stag">TikTok</span><span class="stag">Instagram</span><span class="stag">Threads</span></div>
+      </div>
+      <div class="skill-card fade">
+        <div class="skill-icon">🎬</div>
+        <div class="skill-name">短视频制作</div>
+        <div class="skill-desc">精通 PR / 剪映 / PS / CapCut，AIGC 视频生成与数字人口播，打造过播放量 3000 万+ 的爆款内容。</div>
+        <div class="skill-tags"><span class="stag">PR</span><span class="stag">剪映</span><span class="stag">CapCut</span><span class="stag">即梦</span></div>
+      </div>
+      <div class="skill-card fade">
+        <div class="skill-icon">📦</div>
+        <div class="skill-name">跨境电商</div>
+        <div class="skill-desc">Amazon / Shopify 全流程运营，熟悉 FBA/FBM 发货、Listing 优化、领星 / 光明顶 ERP。</div>
+        <div class="skill-tags"><span class="stag">Amazon</span><span class="stag">Shopify</span><span class="stag">ERP</span></div>
+      </div>
+      <div class="skill-card fade">
+        <div class="skill-icon">📊</div>
+        <div class="skill-name">数据分析</div>
+        <div class="skill-desc">Python（Pandas / Matplotlib）、FineBI、Excel 高级函数，可应用于广告 ROI 优化与用户行为分析。</div>
+        <div class="skill-tags"><span class="stag">Python</span><span class="stag">FineBI</span><span class="stag">Excel</span></div>
+      </div>
+      <div class="skill-card fade">
+        <div class="skill-icon">💬</div>
+        <div class="skill-name">英语商务沟通</div>
+        <div class="skill-desc">CET-4，日均独立处理英文邮件 40+ 封，熟悉欧美客户决策与沟通习惯，擅长增值销售场景表达。</div>
+        <div class="skill-tags"><span class="stag">CET-4</span><span class="stag">北美客服</span></div>
+      </div>
+      <div class="skill-card fade">
+        <div class="skill-icon">🤖</div>
+        <div class="skill-name">AI 工具应用</div>
+        <div class="skill-desc">熟练运用 ChatGPT、Gemini、DeepSeek、即梦等工具提效，持续探索 AIGC 在品牌内容传播的实际落地。</div>
+        <div class="skill-tags"><span class="stag">ChatGPT</span><span class="stag">DeepSeek</span><span class="stag">即梦</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="container">
+    <div class="sec-label">Experience</div>
+    <div class="sec-title">实习经历</div>
+    <div class="timeline">
+      <div class="tl-item fade">
+        <div class="tl-left">
+          <div class="tl-co">深圳星途科技 · HeyBike</div>
+          <div class="tl-date">2025.06 — 2025.09</div>
+        </div>
+        <div class="tl-right">
+          <div class="tl-role">跨境电商运营实习生</div>
+          <ul class="tl-points">
+            <li>负责 Amazon / Shopify 欧美站全流程客服，日均处理英文邮件 40+ 封，北美区纠纷解决率 98%，拦截差评 40+ 条，维持店铺 4.9 星。</li>
+            <li>引导配件增购，客单价提升 15%；梳理 40+ 案例形成《售后 SOP 手册》，响应时长缩短 20%。</li>
+            <li>全面熟悉 FBA/FBM 发货流程与 Shopify 后台订单管理，订单准确率 100%。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tl-item fade">
+        <div class="tl-left">
+          <div class="tl-co">广州羊城晚报</div>
+          <div class="tl-date">2024.09 — 2025.05</div>
+        </div>
+        <div class="tl-right">
+          <div class="tl-role">编辑部实习生</div>
+          <ul class="tl-points">
+            <li>负责抖音/快手/B站/视频号矩阵号运营，累计制作 600+ 条短视频，单条最高 3000 万+ 播放（全网 TOP 1%），总曝光 1 亿+。</li>
+            <li>基于完播率、互动率等周度数据优化内容策略，粉丝增长 30%，互动率提升 25%。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tl-item fade">
+        <div class="tl-left">
+          <div class="tl-co">揭阳中骏世界城</div>
+          <div class="tl-date">2023.07 — 2023.09</div>
+        </div>
+        <div class="tl-right">
+          <div class="tl-role">渠道部助理</div>
+          <ul class="tl-points">
+            <li>独立完成 400+ 组客户电联，转化率 5%（团队均值 2%），提炼六类客户需求画像。</li>
+            <li>运营小红书/视频号/微信/抖音账号，精准关键词引流；优化购房需求调研，到访率提升 8%。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="sec-label">About</div>
+    <div class="sec-title">关于我</div>
+    <div class="about-grid">
+      <div class="about-text fade">
+        <!-- ✏️ 修改个人介绍文字 -->
+        <p>我是<span class="hl">林曼佳</span>，广东财经大学工商管理本科在读（2022–2026），专业成绩前 20%，校级奖学金获得者。</p>
+        <p>我在<span class="hl">海外内容运营</span>、<span class="hl">跨境电商</span>与<span class="hl">AIGC 内容制作</span>三个方向积累了实战经验：做过 600+ 条短视频、运营过 Threads 与小红书账号，也参与过 Amazon / Shopify 北美站点服务与 DTC 用户反馈沉淀。</p>
+        <p>我习惯用数据理解内容，用内容回应用户：从单条 3000 万+ 播放的视频，到 25W+ 月浏览量的 Threads 账号，再到 98% 的跨境纠纷解决率，背后都是选题、表达、数据复盘和协作推进的组合能力。</p>
+        <p>我的个人特点是沉稳、有条理、学习速度快，既能做细致执行，也愿意持续研究 TikTok、Instagram、Threads、小红书和 AIGC 工具在品牌传播里的真实用法。</p>
+      </div>
+      <div class="awards-list fade">
+        <div class="award">
+          <div class="award-ico">🏆</div>
+          <div>
+            <div class="award-title">第九届"东方财富杯"全国大学生金融挑战赛 · 省级二等奖</div>
+            <div class="award-desc">操盘手，账户收益 38.2%，最大回撤 5%，胜率 65%</div>
+          </div>
+        </div>
+        <div class="award">
+          <div class="award-ico">🏆</div>
+          <div>
+            <div class="award-title">第十八届"挑战杯"广东大学生课外学术科技作品竞赛 · 省级二等奖</div>
+            <div class="award-desc">协调 5 名跨学科成员完成 2 万字研究报告，量化矩阵获多家媒体报道</div>
+          </div>
+        </div>
+        <div class="award">
+          <div class="award-ico">🎓</div>
+          <div>
+            <div class="award-title">广东财经大学校级奖学金 · 2023</div>
+            <div class="award-desc">GPA 3.52/5，专业前 20%；市场营销 94 · 国际货物贸易实务 90</div>
+          </div>
+        </div>
+        <div class="award">
+          <div class="award-ico">📜</div>
+          <div>
+            <div class="award-title">技能证书</div>
+            <div class="award-desc">初级会计证 · 计算机二级（MS Office 高级应用）· CET-4</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="sec-label" style="color:rgba(255,255,255,.4)">Contact</div>
+    <div class="sec-title" style="color:#fff; margin-bottom:2.5rem">联系我</div>
+    <div class="contact-grid">
+      <!-- ✏️ 修改联系方式 -->
+      <div class="contact-block">
+        <div class="contact-label">电话</div>
+        <div class="contact-val">13025269312</div>
+      </div>
+      <div class="contact-block">
+        <div class="contact-label">邮箱</div>
+        <div class="contact-val">linmanjia6226@outlook.com</div>
+      </div>
+      <div class="contact-block">
+        <div class="contact-label">意向岗位</div>
+        <div class="contact-val">海外内容运营 / 广告投放 / TikTok 运营</div>
+      </div>
+      <div class="contact-block">
+        <div class="contact-label">学校</div>
+        <div class="contact-val">广东财经大学 · 工商管理 · 2026 届</div>
+      </div>
+    </div>
+    <hr class="contact-divider">
+    <div class="footer-row">
+      <div class="footer-logo">Lin Manjia</div>
+      <div class="footer-copy">© 2025 · Made with care</div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ---------- NAV scroll ---------- */
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', scrollY > 40);
+});
+
+/* ---------- Fade in ---------- */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade').forEach(el => obs.observe(el));
+
+/* ---------- Search modal ---------- */
+function openSearch() {
+  document.getElementById('searchModal').classList.add('open');
+  setTimeout(() => document.getElementById('modalInput').focus(), 120);
+}
+function closeSearch() { document.getElementById('searchModal').classList.remove('open'); }
+function closeOnBg(e) { if (e.target === document.getElementById('searchModal')) closeSearch(); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSearch(); });
+function quickAsk(q) { document.getElementById('modalInput').value = q; sendSearch(); }
+
+/* ---------- Editable portfolio ---------- */
+const STORAGE_KEY = 'lin-manjia-portfolio-edits-v1';
+const editableSelector = [
+  '.hero-eyebrow','.hero-name','.hero-name-zh','.hero-desc','.hero-tag',
+  '.stat-num','.stat-label','.sec-title','.gallery-intro','.platform-name',
+  '.platform-handle','.metric-name','.metric-val','.platform-note',
+  '.video-badge','.video-title','.video-desc','.video-metric',
+  '.work-badge','.work-title','.work-desc','.work-metric',
+  '.skill-name','.skill-desc','.stag','.tl-co','.tl-date','.tl-role',
+  '.tl-points li','.about-text p','.award-title','.award-desc',
+  '.contact-label','.contact-val'
+].join(',');
+
+function getSavedEdits() {
+  try {
+    const local = localStorage.getItem(STORAGE_KEY);
+    if (local) return JSON.parse(local);
+    const initial = document.getElementById('portfolioInitialData');
+    return initial ? JSON.parse(initial.textContent || '{}') : {};
+  } catch(e) { return {}; }
+}
+function setSavedEdits(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+function prepareEditableText() {
+  document.querySelectorAll(editableSelector).forEach((el, index) => {
+    el.dataset.editable = 'true';
+    if (!el.dataset.editId) el.dataset.editId = `text-${index}`;
+  });
+}
+function applySavedEdits() {
+  const saved = getSavedEdits();
+  if (saved.texts) {
+    Object.entries(saved.texts).forEach(([id, html]) => {
+      const el = document.querySelector(`[data-edit-id="${id}"]`);
+      if (el) el.innerHTML = html;
+    });
+  }
+  if (saved.images) {
+    Object.entries(saved.images).forEach(([slot, src]) => setGalleryImage(Number(slot), src));
+  }
+  if (saved.videos) {
+    Object.entries(saved.videos).forEach(([slot, data]) => setVideoCard(Number(slot), data));
+  }
+  const profile = saved.profile || DEFAULT_PROFILE;
+  const profileBox = document.getElementById('profileEditor');
+  if (profileBox) profileBox.value = profile;
+}
+function toggleEditor(force) {
+  const panel = document.getElementById('editPanel');
+  panel.classList.toggle('open', typeof force === 'boolean' ? force : !panel.classList.contains('open'));
+}
+function toggleTextEdit() {
+  const on = !document.body.classList.contains('editing');
+  document.body.classList.toggle('editing', on);
+  document.querySelectorAll('[data-editable]').forEach(el => el.contentEditable = on ? 'true' : 'false');
+}
+function saveTextEdits() {
+  const saved = getSavedEdits();
+  saved.texts = {};
+  document.querySelectorAll('[data-editable]').forEach(el => {
+    saved.texts[el.dataset.editId] = el.innerHTML;
+    el.contentEditable = 'false';
+  });
+  document.body.classList.remove('editing');
+  setSavedEdits(saved);
+  alert('文字已保存到本机浏览器。');
+}
+function fileToDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+function setGalleryImage(slot, src) {
+  const item = document.querySelectorAll('.gallery-item')[slot];
+  if (!item) return;
+  item.innerHTML = `<img src="${src}" alt="作品集照片">`;
+}
+async function applyImageEdit() {
+  const file = document.getElementById('editImageFile').files[0];
+  if (!file) return alert('请先选择一张照片。');
+  const slot = Number(document.getElementById('editImageSlot').value);
+  const src = await fileToDataUrl(file);
+  setGalleryImage(slot, src);
+  const saved = getSavedEdits();
+  saved.images = saved.images || {};
+  saved.images[slot] = src;
+  setSavedEdits(saved);
+  alert('照片已替换。');
+}
+function normalizeEmbedUrl(url) {
+  if (!url) return '';
+  const iframeMatch = url.match(/src=["']([^"']+)["']/i);
+  if (iframeMatch) return iframeMatch[1];
+  const bv = url.match(/(BV[0-9A-Za-z]+)/);
+  if (bv) return `https://player.bilibili.com/player.html?bvid=${bv[1]}&autoplay=0`;
+  const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([0-9A-Za-z_-]+)/);
+  if (yt) return `https://www.youtube.com/embed/${yt[1]}`;
+  return url;
+}
+function setVideoCard(slot, data) {
+  const card = document.querySelectorAll('.video-item')[slot];
+  if (!card) return;
+  const box = card.querySelector('.video-container');
+  const title = card.querySelector('.video-title');
+  const desc = card.querySelector('.video-desc');
+  if (data.type === 'file') {
+    box.innerHTML = `<video controls src="${data.src}" style="width:100%;height:100%;position:absolute;top:0;left:0;object-fit:cover;"></video>`;
+  } else if (data.src) {
+    box.innerHTML = `<iframe src="${data.src}" scrolling="no" frameborder="no" allowfullscreen="true"></iframe>`;
+  }
+  if (data.title && title) title.textContent = data.title;
+  if (data.desc && desc) desc.textContent = data.desc;
+}
+async function applyVideoEdit() {
+  const slot = Number(document.getElementById('editVideoSlot').value);
+  const file = document.getElementById('editVideoFile').files[0];
+  const rawUrl = document.getElementById('editVideoUrl').value.trim();
+  const data = {
+    title: document.getElementById('editVideoTitle').value.trim(),
+    desc: document.getElementById('editVideoDesc').value.trim()
+  };
+  if (file) {
+    data.type = 'file';
+    data.src = await fileToDataUrl(file);
+  } else if (rawUrl) {
+    data.type = 'embed';
+    data.src = normalizeEmbedUrl(rawUrl);
+  } else {
+    return alert('请粘贴视频链接，或选择一个本地视频文件。');
+  }
+  setVideoCard(slot, data);
+  const saved = getSavedEdits();
+  saved.videos = saved.videos || {};
+  saved.videos[slot] = data;
+  setSavedEdits(saved);
+  alert('视频卡片已更新。');
+}
+function saveProfileEdit() {
+  const saved = getSavedEdits();
+  saved.profile = document.getElementById('profileEditor').value.trim() || DEFAULT_PROFILE;
+  setSavedEdits(saved);
+  alert('AI 资料已保存。');
+}
+function resetPortfolioEdits() {
+  if (!confirm('确定清空本机保存的文字、图片、视频和 AI 资料修改吗？')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+function exportEditedHtml() {
+  saveTextEdits();
+  toggleEditor(false);
+  const profileBox = document.getElementById('profileEditor');
+  if (profileBox) profileBox.textContent = profileBox.value;
+  let initial = document.getElementById('portfolioInitialData');
+  if (!initial) {
+    initial = document.createElement('script');
+    initial.id = 'portfolioInitialData';
+    initial.type = 'application/json';
+    document.body.appendChild(initial);
+  }
+  initial.textContent = JSON.stringify(getSavedEdits()).replace(/<\/script/gi, '<\\/script');
+  const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '林曼佳_作品集_已编辑.html';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const hero = document.getElementById('home');
+  const about = document.getElementById('about');
+  if (hero && about && hero.nextElementSibling !== about) hero.insertAdjacentElement('afterend', about);
+  prepareEditableText();
+  applySavedEdits();
+});
+
+/* ---------- Lightbox ---------- */
+function openLightbox(item) {
+  const img = item.querySelector('img');
+  if (!img) return; // 没有图片时不打开
+  document.getElementById('lightboxImg').src = img.src;
+  document.getElementById('lightbox').classList.add('open');
+}
+
+/* ---------- Video tip ---------- */
+function showVideoTip() {
+  const tip = document.getElementById('videoTip');
+  tip.style.display = tip.style.display === 'none' ? 'block' : 'none';
+}
+
+/* ---------- AI Answer ---------- */
+const DEFAULT_PROFILE = `你是林曼佳的个人AI助手，根据以下资料简洁、自然地回答关于她的问题，使用中文，3-5句话内为佳，有数据时引用数据。
+
+基本信息：林曼佳，女，广东财经大学工商管理本科（2022-2026），GPA 3.52/5（专业前20%），校级奖学金。意向：海外内容运营/广告投放/TikTok运营。联系方式：13025269312，linmanjia6226@outlook.com。
+
+技能：
+- 海外社媒：TikTok/Instagram/Threads运营，Threads单月25W+浏览量，对平台推荐机制、热点内容及互动逻辑有实战理解；持续观察海外用户内容偏好与互动习惯
+- 短视频：PR/剪映/PS/CapCut，AIGC视频（即梦、DeepSeek）、数字人口播；羊城晚报制作600+条视频，单条3000万+播放全网TOP1%，总曝光1亿+
+- 跨境电商：Amazon/Shopify北美站点服务，理解DTC品牌运营、FBA/FBM、售后服务逻辑、领星/光明顶ERP、纠纷处理
+- 数据分析：Python基础、FineBI、Excel高级应用；能做数据可视化整理、周度内容复盘、预算执行率分析
+- 英语：CET-4，日均英文邮件40+封，可处理北美客户沟通
+- AIGC工具：ChatGPT/Gemini/DeepSeek/即梦，能完成脚本生成、内容优化、数字人口播和视频整合
+
+实习经历：
+1. 深圳星途科技HeyBike（2025.06-09）海外线上服务实习生：负责Amazon/Shopify北美站客户服务，协同物流、财务、运营定位发货延迟、关税差异等纠纷原因；纠纷解决率98%，拦截差评30+条；用产品场景图、安装指导视频推荐配件，客单价+15%；整理FAQ并协助优化产品售后说明页面，形成SOP；沉淀DTC用户反馈
+2. 广州羊城晚报（2024.09-2025.05）编辑部实习生：制作600+条短视频，单条最高3000万+播放（全网TOP1%），总曝光1亿+；参与热点内容选题和传播策略优化，使用FineBI做数据可视化分析，粉丝增长30%
+3. 揭阳中骏世界城（2023.07-09）渠道部助理：运营小红书/视频号/微信/抖音账号，关键词与本地化话题引流；400+组客户触达，转化率5%（均值2%），提炼六类客户画像
+
+个人项目：Threads英文账号单月25W+；小红书粉丝200+多篇破万；AIGC视频（唐诗古诗分镜、数字人发布会）；华为开发者大会2024会务（中英双语接待50+人次/日，0延误）；量化交易收益38.2%最大回撤5%（东方财富杯省级二等奖）；挑战杯省级二等奖；道滘镇财政评估项目调研（3项优化建议被采纳）
+
+在校经历：院学生会文体部负责人（服务3000+人）；校行政楼学生助理；华为开发者大会会务
+
+性格特点：沉稳有条理，具备长线思维与风险意识；对内容创作有天然敏感度；擅长跨职能协作与资源整合；数据驱动型思维与创意叙事并重。`;
+
+async function sendSearch() {
+  const q = document.getElementById('modalInput').value.trim();
+  if (!q) return;
+  const el = document.getElementById('aiAnswer');
+  el.className = 'ai-answer loading'; el.textContent = '思考中…';
+  const profile = getSavedEdits().profile || DEFAULT_PROFILE;
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: q, profile })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'AI request failed');
+    el.className = 'ai-answer show';
+    el.innerHTML = (data.answer || '暂时没有生成回答。').replace(/\n/g, '<br>');
+  } catch(e) {
+    const ans = localProfileAnswer(q, profile);
+    el.className = 'ai-answer show';
+    el.innerHTML = `${ans.replace(/\n/g, '<br>')}<br><br><span style="color:var(--ink3);font-size:.78rem;">提示：当前 AI 后台还没有连接成功，已先显示本地资料回答。请检查 Vercel 环境变量 DEEPSEEK_API_KEY 是否填写。</span>`;
+  }
+}
+
+function localProfileAnswer(question, profile) {
+  const q = question.toLowerCase();
+  const lines = profile.split('\n').map(s => s.trim()).filter(Boolean);
+  const pick = keywords => lines.filter(line => keywords.some(k => line.toLowerCase().includes(k.toLowerCase()))).slice(0, 4);
+  let hits = [];
+  if (/跨境|amazon|shopify|dtc|客服|北美|售后/.test(q)) hits = pick(['跨境','Amazon','Shopify','DTC','北美','纠纷','SOP']);
+  else if (/视频|剪辑|爆款|羊城|播放|内容/.test(q)) hits = pick(['短视频','羊城晚报','3000万','600+','总曝光','内容']);
+  else if (/ai|aigc|即梦|deepseek|数字人|工具/.test(q)) hits = pick(['AIGC','DeepSeek','即梦','数字人','ChatGPT','Gemini']);
+  else if (/数据|分析|finebi|python|excel|增长/.test(q)) hits = pick(['数据','FineBI','Python','Excel','增长','可视化']);
+  else if (/社媒|tiktok|instagram|threads|小红书/.test(q)) hits = pick(['海外社媒','TikTok','Instagram','Threads','小红书']);
+  else if (/性格|特点|优势|适合|岗位/.test(q)) hits = pick(['性格特点','意向','沉稳','协作','数据驱动']);
+  else hits = pick(['基本信息','技能','实习经历','个人项目','性格特点']);
+  if (!hits.length) hits = lines.slice(0, 4);
+  return `根据我目前喂养的资料，林曼佳可以这样概括：\n${hits.map(s => `• ${s.replace(/^[-0-9. ]+/, '')}`).join('\n')}\n\n如果你想让回答更像真正的 AI 助理，可以在右下角「编辑」里的 AI 知识库继续补充项目细节、作品链接和更个人化的表达。`;
+}
+</script>
+</body>
+</html>
